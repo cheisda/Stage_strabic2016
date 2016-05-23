@@ -1,0 +1,268 @@
+/* FONT */
+@font-face {
+	font-family: "GT-Sectra-Content";
+	src: url('GT-Sectra-Book.ttf');
+}
+
+@font-face {
+	font-family: "GT-Sectra-Content";
+	font-style: italic;
+	src: url('GT-Sectra-Book-Italic.ttf');
+}
+
+@font-face{
+	font-family: "GT-Sectra-Title";
+	src: url('GT-Sectra-Display-Super.ttf');
+}
+
+@font-face{
+	font-family: "GT-Sectra-Title";
+	font-style: italic;
+	src: url('GT-Sectra-Display-Super-Italic.ttf');
+}
+
+body {
+	margin: inherit;
+	border-left: 20px solid rgb(0,0,255);
+	border-right: 20px solid rgb(0,0,255);  
+}
+
+/* CSS */
+body {
+    font-family: "GT-Sectra-Content", Helvetica, Arial, sans-serif;
+}
+body:before, body:after {
+	content: "";
+	position: fixed;
+	background: rgb(0,0,255);
+	left: 0;
+	right: 0;
+	height: 20px;
+	z-index: 100;
+}
+
+body:before {
+	top: 0;
+}
+
+body:after {
+	bottom: 0;
+}
+
+.container {
+  	padding: 0px 40px 40px 40px;
+  	
+}
+
+.top {
+	max-width: 70%;
+	position: fixed;
+	margin-top: 10px;
+	padding-top: 40px;
+  	background: rgb(255,255,255);
+  	z-index: 90;
+  	padding-bottom: 2%;
+	margin-left: -1px;
+}
+
+.header {
+	-ms-transform: rotate(-5deg); /* IE 9 */
+    -webkit-transform: rotate(-5deg); /* Chrome, Safari, Opera */
+    transform: rotate(-5deg);
+    background-color: rgb(255,255,255);
+}
+
+.header .author {
+
+}
+
+.header .title {
+	font-family: "GT-Sectra-Title";;
+  	text-transform: uppercase;
+  	font-size: 60px;
+}
+
+
+.header .sub-title{
+	font-family: "GT-Sectra-Title";;
+	font-size: 30px;
+}
+
+.content {
+    padding-top: 29%;
+  	padding-right: 25%;
+
+}
+
+.content .chapo {
+	font-family: "GT-Sectra-Title";;
+}
+
+/* Marge */
+
+.marge {
+	position: relative;
+}
+
+.marge .inner {
+	position: absolute;
+  	width: 29%;
+  	left: 100%;
+  	padding-left: 45px;
+}
+
+.marge p{
+		font-size: 11px;
+}
+
+.marge a{
+	color: rgb(0,0,255);
+  	border: none;
+  	text-decoration: underline;
+  	font-style: italic;
+}
+
+/* iframe */
+.iframe-content {
+	width: 30px;
+  	height: 20px;
+	border: 8px double rgb(0,0,255);
+}
+
+.iframe-wrapper {
+	display: inline-block;
+	position: relative;
+}
+
+.iframe-blocker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 95%;
+  height: 95%;
+}
+/* end - iframe */
+
+/* images */
+.miniature {
+	width: 30px;
+  	height: 20px;
+  	filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+}
+
+.miniature img {
+	z-index: 0;
+}
+
+.big_image {
+	width: 100%;
+	height : auto;
+}
+
+.border{
+	display: inline-block;
+	border: 4px solid rgb(0,0,255);
+	margin-bottom: 3px;
+	z-index: 0;
+}
+
+.border_big{
+	width: 100%;
+  	height: 100%;
+}
+
+/* end - images */
+.normalSize {
+	width: 100%;
+  	height: auto;
+  	border: 4px solid rgb(0,0,255);
+}
+
+/* popup */
+.popup {
+	position: absolute;
+	visibility: hidden;
+	border: 3px solid rgb(0,0,255);
+	background: #DDDDDD;
+}
+
+.imgpopup {
+	width: inherit;
+  	height: inherit;
+}
+
+.vidpopup {
+	width: inherit;
+  	height: inherit;
+  	border: none;
+
+}
+/* end popup */
+
+/* lines */
+.lines {
+	position: absolute;
+	z-index: -1;
+}
+
+.line {
+	stroke : rgb(0,0,255);
+	fill : transparent;
+	stroke-width: 4;
+}
+/* p, h, a, q */
+
+p {
+	margin-bottom: 25px;
+	font-size: 24px;
+}
+
+h1,h2,h3,h4{
+	font-family: "GT-Sectra-Title";;
+}
+
+h1 {
+	font-size: 41px;
+}
+
+h2 {
+	font-size: 34px;
+}
+
+h3 {
+	font-size: 27px;
+}
+
+h4 {
+	font-size: 22px;
+}
+
+a {
+	color: inherit;
+  	text-decoration: none;
+  	border-bottom: 4px solid rgb(0,0,255);
+}
+
+q {
+	font-size: 24px;
+  	font-style: italic;
+  	padding-left: 6px;
+  	margin-left: 50px;
+  	display: inline-block;
+}
+
+ul {
+	font-size: 24px;
+}
+
+li {
+	margin-bottom: inherit;
+}
+
+.gris {
+	color: #808080;
+}

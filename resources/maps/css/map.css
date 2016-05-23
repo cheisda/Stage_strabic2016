@@ -1,0 +1,55 @@
+body {
+    font-family: Arial, Verdana, sans-serif;
+    background-image: url("data/html/bg_grid.png");
+    background-size: 200px 200px;
+}
+.article_container {
+    width:80px;
+    height:80px;
+    font-size: 10px;
+    text-align: center;
+    line-height: 70px
+}
+.title {
+    background-color: rgb(255,255,255);
+    font-size:12px;
+    line-height: normal;
+    font-weight: bold;
+    color: rgb(0,0,255)
+}
+.top-right {
+    -webkit-transform: rotate(35deg);
+    -moz-transform: rotate(35deg);
+    -o-transform: rotate(35deg);
+    position: absolute;
+    top: -5px;
+    right:-45px;
+    width:100px;
+}
+.top-left {
+    -webkit-transform: rotate(-35deg);
+    -moz-transform: rotate(-35deg);
+    -o-transform: rotate(-35deg);
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    width: 100px;
+}
+.bottom-right {
+    -webkit-transform: rotate(-30deg);
+    -moz-transform: rotate(-30deg);
+    -o-transform: rotate(-30deg);
+    position: absolute;
+    top: 60px;
+    right: -45px;
+    width: 100px;
+}
+.bottom-left {
+    -webkit-transform: rotate(35deg);
+    -moz-transform: rotate(35deg);
+    -o-transform: rotate(35deg);
+    position: absolute;
+    top: 65px;
+    right: 20px;
+    width: 100px;
+}
