@@ -3,17 +3,48 @@ import graphGeneration.UI.ArticleFrame;
 import graphGeneration.generation.Article;
 import graphGeneration.generation.GenGraphs;
 import graphGeneration.generation.IndexedEntry;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jsoup.Jsoup;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+
+
+//cheisda
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+//EndOfCheisda
 
 //CREATE TABLE spip_articles (
 //		id_article INTEGER NOT NULL ,
@@ -79,7 +110,7 @@ public class StrabicDataBase {
 		Statement stmt = null;
 
 		File f = new File(GenGraphs.strabicDBPath);
-		//if(!f.exists() ||f.isDirectory()) { 
+		//if(!f.exists() ||f.isDirectory()) {
 		//	strabic.strabicDBPath = MainFrame.selectFile(strabic.articlegui, false, "Give the DB File");
 		//}
 
@@ -101,22 +132,28 @@ public class StrabicDataBase {
 		}
 		System.out.println("Opened database successfully");
 		try {
-			/// 
+			///
 			stmt = c.createStatement();
 			//ResultSet rs = stmt.executeQuery( "SELECT * FROM spip_auteurs;" );
 			// SAISONS = spip_rubriques;
 			ResultSet rs = stmt.executeQuery( "SELECT * FROM spip_rubriques;" );
 			int i=0;
+      //added by cheisda
+     // System.out.println("resultSet : "+rs);
 			while ( rs.next() ) {
 				if (i >= maxEntry) break;
 				//System.out.println("----------------------------------------------------------------------------------");
 				//System.out.println("----------------------------------" + i + "--------------------------------------------");
 				//System.out.println("----------------------------------------------------------------------------------");
 				int id_rubrique  = rs.getInt("id_rubrique");
+        /**
+         * 07.062016la ligne de code suivante était en commentaire
+         * System.out.println("id_rubrique :" + id_rubrique);
+         */
 				//System.out.println("id_rubrique :" + id_rubrique);
 
 				String  titre = rs.getString("titre");
-				//				System.out.println("titre :" + titre);
+							//	System.out.println("titre :" + titre);
 				if ("brèves".equals(titre)) breveNumber = id_rubrique;
 				if ("livres".equals(titre)) livreNumber = id_rubrique;
 				if ((id_rubrique >=0) && (id_rubrique < maxEntry)){
@@ -163,6 +200,10 @@ public class StrabicDataBase {
 				if ((id_document >=0) && (id_document < maxEntry)){
 					//String[] ss =fichier.split("/");
 					//documents[id_document] = ss[ss.length-1];
+
+          /**
+           * construction d'un tableau qui récupère tous les éléments dont nous avons besoins pour créer les pages HTML
+           */
 					documents[id_document] = GenGraphs.urlImage+fichier;
 				}
 				//				int id_objet  = rs.getInt("id_objet");
@@ -179,7 +220,7 @@ public class StrabicDataBase {
 				String url = rs.getString("url");
 				String utype = rs.getString("type");
 				//				if ("rubrique".equals(utype)) {
-				//					System.out.println("url"+" (" +utype + "):" + urlStrabic+url );	
+				//					System.out.println("url"+" (" +utype + "):" + urlStrabic+url );
 				//				}
 				int id_objet  = rs.getInt("id_objet");
 				//System.out.println("id_objet :" + id_objet);
@@ -206,7 +247,9 @@ public class StrabicDataBase {
 
 				//				image_une
 				String  image_une = rs.getString("image_une");
-				//System.out.println("image_une :" + image_une);
+       // System.out.println("image_une :" + image_une);
+       // System.out.println("un truc : " + rs.getString(6));
+
 
 				//int id_article  = rs.getInt(1);
 				int id_article  = rs.getInt("id_article");
@@ -244,8 +287,8 @@ public class StrabicDataBase {
 				String soustitre = rs.getString("soustitre");
 				//				System.out.println("soustitre: " +soustitre);
 
-				String type_article = rs.getString("type_article");
-				//				 System.out.println("type_article: " + type_article);
+				/*String type_article = rs.getString("type_article"); //addedby Cheisda
+        System.out.println("type_article: " + type_article);*/
 
 				String texte = null;
 				String rawtexte = rs.getString("texte");
@@ -312,8 +355,22 @@ public class StrabicDataBase {
 					no.setNeedUpdate(true);
 				} else {
 					//System.out.println("Already exist: "+titre);
-				}	
+				}
 			}
+      /**ajout méthode au  june 14 2016
+      //Vérifie que les images soient bien présentes, que ce soit en local ou sur internet**/
+      //checkImage(c, stmt);
+
+
+/*
+      Statement st = c.createStatement();
+      String query = "SELECT * FROM ";
+      ResultSet rsCheisda = st.executeQuery(query);
+      ResultSetMetaData rsmd = rs.getMetaData();
+
+      int columnsNumber = rsmd.getColumnCount();
+*/
+
 			rs.close();
 			stmt.close();
 			if (GenGraphs.gui){
@@ -327,7 +384,7 @@ public class StrabicDataBase {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-}
+} //fin importBD
 
 	public static String html2text(String html) {
 	return Jsoup.parse(html).text();
@@ -348,7 +405,7 @@ public class StrabicDataBase {
 				listMatches.add(v);
 			}  catch ( NumberFormatException e ) {
 
-			}	
+			}
 		}
 	}
 	return listMatches;
@@ -369,7 +426,7 @@ public class StrabicDataBase {
 				return v;
 			}  catch ( NumberFormatException e ) {
 
-			}	
+			}
 		}
 	}
 	return -1;
@@ -392,7 +449,7 @@ public class StrabicDataBase {
 				if ((id >=0) && (id < maxEntry)){
 					//System.out.println(documents[id]);
 					out = out + "<image=" +documents[id] + ">";
-				} 
+				}
 			} else {
 				out = out + "<" + ref + ">";
 			}
@@ -404,4 +461,43 @@ public class StrabicDataBase {
 	}
 	return out;
 }
-}
+/**
+  public static void checkImage(Connection c,Statement stmt){
+    try {
+      stmt = c.createStatement();
+      ResultSet rs = stmt.executeQuery( "SELECT * FROM spip_documents;" );
+      String resultat = rs.toString();
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+/**
+  public static Boolean lookImageThumbs(String image){
+
+    CloseableHttpClient client = new DefaultHttpClient();
+    String query = url +"/thumb_" + image;
+    System.out.println(query);
+
+    HttpGet httpGet = new HttpGet(query);
+    CloseableHttpResponse response1 = null;
+    try {
+      response1 = client.execute(httpGet);
+      System.out.println(response1);
+      int status = response1.getStatusLine().getStatusCode();
+      if (status == 200)
+        return true;
+      else
+        return false;
+
+    } catch (ClientProtocolException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return false; //request did not work.
+  }*/
+}//fin de classe

@@ -102,13 +102,13 @@ public class GenGraphs {
 
             // WRITE ARTICLES IN FILES
 			if(writeArticleFiles)
-			{
-				if (GenGraphs.getAllEntries().getArticlelist().size() > 0){
-					for (Article a: GenGraphs.getAllEntries().getArticlelist()){
-						String path = articleTxtPath + a.getFilename() + ".txt";
-						System.out.println("Writing file: "+path);
-						a.writeInFile(path);
-					}
+          {
+            if (GenGraphs.getAllEntries().getArticlelist().size() > 0){
+              for (Article a: GenGraphs.getAllEntries().getArticlelist()){
+                String path = articleTxtPath + a.getFilename() + ".txt";
+                System.out.println("Writing file: "+path);
+                a.writeInFile(path);
+              }
 				}
 			}
 
@@ -192,11 +192,11 @@ public class GenGraphs {
 	public static String checkXMLFile(){
 		return getAllEntries().check();
 	}
-	
+
 	public static String doPdfAnalysis(String filename){
 		String result = "No file given";
 		if (filename == null) return result;
-		
+
 		File[] files = new File(filename).listFiles();
 		if (files.length > 0){
 			result = "";
@@ -221,7 +221,7 @@ public class GenGraphs {
 		}
 		return result;
 	}
-	
+
 	public static void builConceptandDataList(){
 		NodeList nodes = null;
 		XPath xPath = XPathFactory.newInstance().newXPath();
@@ -263,7 +263,7 @@ public class GenGraphs {
 		}
 		Collections.sort(getAllEntries().getGlobalist(), IndexedEntry.entryNameComparator);
 	}
-	
+
 	public static void builArticlessList(){
 		NodeList nodes = null;
 		XPath xPath = null;
@@ -297,7 +297,7 @@ public class GenGraphs {
 		File f = new File(filepathsmane);
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = null;
-		
+
 		try {
 			builder = dbf.newDocumentBuilder();
 		} catch (ParserConfigurationException e1) {
@@ -333,7 +333,7 @@ public class GenGraphs {
 		//storageFileOut
 		writeXMLTree(filepath,skosTree);
 	}
-	
+
 	public static void writeXMLTreeButtonAction(){
 		// update the data file
 		//storageFileOut
@@ -360,14 +360,14 @@ public class GenGraphs {
 
         } catch (TransformerException te) {
             System.out.println(te.getMessage());
-        } 
+        }
 		try {
 			soutput.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static GlobalEntriesList getAllEntries() {
 		return allEntries;
 	}

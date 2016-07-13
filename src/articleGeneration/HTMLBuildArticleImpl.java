@@ -1,6 +1,14 @@
 package articleGeneration;
 
 import graphGeneration.generation.Article;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.text.ParseException;
@@ -9,6 +17,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+//Cheisda
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Implementation of a HTML builder for articles
@@ -62,13 +72,98 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         new File(OUPUT_DIRECTORY).mkdirs();
     }
 
+
+
+
+    static boolean verifImage(String lien){
+        boolean resultat;
+        CloseableHttpClient client = new DefaultHttpClient();
+        String query = lien;
+        System.out.println(query);
+        HttpGet httpGet = new HttpGet(query);
+        CloseableHttpResponse response1 = null;
+        try {
+            response1 = client.execute(httpGet);
+            System.out.println(response1);
+            int status = response1.getStatusLine().getStatusCode();
+            if (status == 200)
+                resultat= true;
+            else
+                resultat= false;
+
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        try {
+            client.close();
+        } catch (IOException e) {
+            System.out.println("client closing issue");
+        }
+        resultat= false; //request did not work.
+        return resultat;
+    }
+
+  public void checkImage(String texteBrut){
+    String text = texteBrut;
+      //System.out.println(text);
+    int compteur =0;
+    try{
+      Pattern p= p_image;
+      String entree = text;
+      Matcher m = p.matcher(entree);
+
+      while(m.find()){
+        System.out.println("FOUND");
+        compteur++;
+        //our chaque groupe capturé
+        for (int i=0; i<= m.groupCount(); i++){
+          //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
+          System.out.println("Groupe " + i +  ":" + m.group(1));
+            //Vérification des liens.
+            verifImage(m.group(1));
+            String newFileName =  "src\\lienImages.txt";
+           //if (verifImage(m.group(1))) {
+                try {
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
+                    // normalement si le fichier n'existe pas, il est crée à la racine du projet
+                    writer.write(m.group(1));
+                    writer.newLine();
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+          //  }else {
+            //    System.out.println("Le lien ne fonctionne pas");
+          //  }
+        }//fin de for
+      }//fin WHILE
+    }catch(PatternSyntaxException pse){
+      System.err.println("Le pattern n'a pas un format correct.");
+    }
+    System.out.println("Il y a "+compteur+" images.");
+  }
+
+ /* public boolean lookImage(File fichierLiensImages){
+    boolean result = true;
+
+
+    return result;
+  }*/
+
     public void create(Article article)
     {
-        String text = article.getChapo() + article.getRawtext();
-        String filename = article.getFilename() + ".html";
 
-        text = this.parser(text);
-        String html = this.getHtml(article, text);
+      String text = article.getChapo() + article.getRawtext();
+      String filename = article.getFilename() + ".html";
+        checkImage(text);
+      text = this.parser(text);
+      String html = this.getHtml(article, text);
+        //System.out.println(html);
+
 
         // write buffer in a file
         BufferedWriter out = null;
@@ -124,7 +219,8 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         text = p_poesie.matcher(text).replaceAll("\n\n<q>$1</q>\n");
 
         // Images
-        text = p_image.matcher(text).replaceAll("\n\n<div class=\\\"border\"><img src=\"$1\" alt=\"//\" class=\"miniature\"/></div>\n\n");
+      text = p_image.matcher(text).replaceAll("\n\n<div class=\\\"border\"><img src=\"$1\" alt=\"//\" class=\"miniature\"/></div>\n\n");
+
 
         // Iframe
         text = p_iframe.matcher(text).replaceAll("\n\n<div class=\"iframe-wrapper\"><iframe class=\"iframe-content\" src=\"$1\"></iframe><div class=\"iframe-blocker\"></div></div>\n\n");

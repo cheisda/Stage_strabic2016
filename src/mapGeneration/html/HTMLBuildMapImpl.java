@@ -33,6 +33,10 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
     public HTMLBuildMapImpl(String output_directory, String resources_directory) {
         OUPUT_DIRECTORY = output_directory;
         RESOURCES_FOLDER = resources_directory;
+      /**
+       * Added By cheisda on June 13th 2016
+       */
+     // System.out.println("it's me, Wombat! the ouptPut directory " +OUPUT_DIRECTORY );
 
         // CREATE DIRECTORY IF NOT EXIST
         new File(OUPUT_DIRECTORY).mkdirs();
@@ -85,17 +89,25 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         HTMLString.append("px;z-index:");
         HTMLString.append(Utils.round(data_layout.getZ(), 2));
         HTMLString.append("\">");
-
+/**
+ * Modif à faire ici soit ajouter un ../ avant le data/articles soit dans la balise href ajouter directement
+ * l'adresse complète qui mène vers l'article.
+ */
         // href article
         HTMLString.append("<a href=\"");
-        HTMLString.append(data_article.getUrl_article());
+      //modif on 06.14.2016
+        HTMLString.append("http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getUrl_article());
+        //System.out.println("href artiche.getURL : "+  data_article.getUrl_article());
+
         HTMLString.append("\" target=\"_parent\" class=\"href-article\">");
 
         // thumbnail
         HTMLString.append("<img src=\"");
-        HTMLString.append(data_article.getThumbnail());
+        HTMLString.append("http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getThumbnail());
+      //System.out.println("thumbnail "+ data_article.getThumbnail());
         HTMLString.append("\" alt=\"");
         HTMLString.append(data_article.getTitle());
+      //System.out.println("titre artice : " +data_article.getTitle());
         HTMLString.append("\" class=\"thumbnail\">");
         HTMLString.append("</a>");
 

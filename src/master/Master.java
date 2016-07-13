@@ -14,6 +14,7 @@ import java.io.IOException;
  */
 public class Master {
 
+    //private static final String DEFAULT_OUTPUT_MAPS_DIRECTORY = " ";
     private static final String DEFAULT_OUTPUT_MAPS_DIRECTORY = "data/maps/";
     private static final String DEFAULT_OUTPUT_ARTICLES_DIRECTORY = "data/articles/";
     private static final String DEFAULT_SEASONS_DIRECTORY = "data/tmp/";
@@ -97,4 +98,17 @@ public class Master {
         if(path.charAt(path.length()-1)!= File.separatorChar) path += File.separator;
         return path;
     }
+
+
+    /**
+     * TO DO
+     * regarder le contenu de la bdd car le nom des images dans les .html ne correspond pas au nom de l'image dans le repo
+     * Aussi afficher la bdd via l'interface de l'appli (??) strabic et essayer de savoir si les fichiers images sont présents ou non
+     * pour cela, si le fichier est en local faire : ??
+     * si le fichier est en ligne, executer un prg qui requetera sur un http : si ça renvoie 200 = OK sinon c'est faux, il y a erreur
+     *
+     * Les images sont tjs sur strabifr et c'est là qu'il faut aller les chercher
+     * ->Comprendre ce que StrabicDataBase.java fait
+     *
+     */
 }

@@ -41,26 +41,27 @@ public class Article {
 	private String URLend = null;
 	private final int displayLength = 100;
 	private Boolean needUpdate = false;
-	
+
 	public Article(Node n){
 		setNodeXML(n);
-		keywordsURI = new ArrayList<String>(); 
-		foundURI = new ArrayList<String>(); 
-		rawAuthors = new ArrayList<String>(); 
+		keywordsURI = new ArrayList<String>();
+		foundURI = new ArrayList<String>();
+		rawAuthors = new ArrayList<String>();
 		 buildXML();
 	}
 
 	public Article(){
-		keywordsURI = new ArrayList<String>(); 
-		foundURI = new ArrayList<String>(); 
+		keywordsURI = new ArrayList<String>();
+		foundURI = new ArrayList<String>();
 		rawAuthors = new ArrayList<String>();
 		setNeedUpdate(true);
 	}
-	
+
 	public String toString(){
 		int i = 0;
 		int len = 0;
 		String outs = "";
+    System.out.println("le out dde la fonction toString : line 64 "+ outs);
 		outs = outs + "saison: " + getSaison() + "\n";
 		outs = outs + "titre: " + getTitre() + "\n";
 		outs = outs + "URL: " + getURL() + "\n";
@@ -73,13 +74,18 @@ public class Article {
 		for (i=0;i<len;i++){
 			outs = outs + "found: " + getFoundURI().get(i) + "\n";
 		}
+    System.out.println("le out dde la fonction toString : line 77 "+ outs);
 		if (getText().length() > displayLength)
 			outs = outs + "text: \n" + getText().substring(0, displayLength) + "...\n";
 		else
 			outs = outs + "text: \n" + getText() + "...\n";
+    //01.07.2016
+    //System.out.println("le out dde la fonction toString : "+ outs);
+
+
 		return outs;
 	}
-	
+
 	private void buildXML(){
 		int j;
 		if (getNodeXML() == null) return;
@@ -105,22 +111,22 @@ public class Article {
 				} else if ("found".equals(cname)){
 					String val1 = getAttValue(c,"rdf:about");
 					if (val1 != null) getFoundURI().add(val1);
-				} 
+				}
 				break;
 			}
 		}
 	}
-	
+
 	private void removeXMLNode(){
 		Node n = getNodeXML();
 		if (n == null) return;
 		GenGraphs.getArticleRoot().removeChild(n);
 	}
-	
+
 	private Node addXMLNode(){
 		Element ncn = null;
 		if (GenGraphs.getArticleRoot() == null) {
-			JOptionPane.showMessageDialog(null,"Pas de racine d'arbre XML","Internal Erreur", JOptionPane.PLAIN_MESSAGE); 
+			JOptionPane.showMessageDialog(null,"Pas de racine d'arbre XML","Internal Erreur", JOptionPane.PLAIN_MESSAGE);
 			return null;
 		}
 		ncn = GenGraphs.getArticleTree().createElement("article");
@@ -128,42 +134,43 @@ public class Article {
 		System.out.println("adding XML node for an article");
 		return ncn;
 	}
-	
+
 	public void updateNode(){
 		int i,len;
 		Document cdoc = null;
 		Element ncn = null;
-		
+
 		if (!getNeedUpdate()) return;
 		removeXMLNode();
 		setNodeXML(addXMLNode());
 
 		cdoc = GenGraphs.getArticleTree();
 		if (cdoc == null) {
-			JOptionPane.showMessageDialog(null,"Pas d'arbre XML","Internal Erreur", JOptionPane.PLAIN_MESSAGE); 
+			JOptionPane.showMessageDialog(null,"Pas d'arbre XML","Internal Erreur", JOptionPane.PLAIN_MESSAGE);
 			return;
 		}
 		System.out.println("updating: "+getTitre());
 		ncn = cdoc.createElement("saison");
 		ncn.setTextContent(getSaison());
 		getNodeXML().appendChild(ncn);
-		
+
 		ncn = cdoc.createElement("titre");
 		ncn.setTextContent(getTitre());
 		getNodeXML().appendChild(ncn);
-		
+
 		ncn = cdoc.createElement("urlImage");
 		ncn.setTextContent(getThumbnail());
+    System.out.println("document ncn gettextContent method : "+ncn.getTextContent());
 		getNodeXML().appendChild(ncn);
-		
+
 		ncn = cdoc.createElement("URL");
 		ncn.setTextContent(getURL());
 		getNodeXML().appendChild(ncn);
-		
+
 		ncn = cdoc.createElement("text");
 		ncn.setTextContent(getText());
 		getNodeXML().appendChild(ncn);
-		
+
 		len = getKeywords().size();
 		for (i=0;i<len;i++){
 			ncn = cdoc.createElement("keyword");
@@ -178,7 +185,7 @@ public class Article {
 		}
 		setNeedUpdate(false);
 	}
-	
+
 	public String searchKeyword(String kw){
 		if (kw == null) return null;
 		for(String temp2: getKeywords()){
@@ -189,7 +196,7 @@ public class Article {
 		}
 		return null;
 	}
-	
+
 	public String searchConcept(String kw){
 		if (kw == null) return null;
 		for(String temp2: getFoundURI()){
@@ -200,9 +207,9 @@ public class Article {
 		}
 		return null;
 	}
-	
+
 	public FileAnalysisResult analyseConcept(){
-		
+
 		int len = PdfTextAnalysis.getResults().size();
 		for (int j = 0; j < len; j++){
 			if (getTitre().equals(PdfTextAnalysis.getResults().get(j).getFilePath())) return PdfTextAnalysis.getResults().get(j);
@@ -224,7 +231,7 @@ public class Article {
 		}
 		return an;
 	}
-	
+
 	public String getSaison() {
 		return saison;
 	}
@@ -268,7 +275,7 @@ public class Article {
 					textwithlinebreak[i] = '\n';
 					count = 0;
 				}
-			} 
+			}
 		}
 		this.text = new String(textwithlinebreak);
 	}
@@ -320,14 +327,14 @@ public class Article {
 	public void setNeedUpdate(Boolean needUpdate) {
 		this.needUpdate = needUpdate;
 	}
-	
+
 	private Boolean compareKeywords(String kw1, String kw2){
 		if (kw1 == null) return false;
 		if (kw2 == null) return false;
 		if (kw1.equals(kw2)) return true;
 		return false;
 	}
-	
+
 	int countProximity(Article otherone){
 		int score = 0;
 		for (String kw1: getKeywords()){
@@ -379,7 +386,7 @@ public class Article {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		 
+
 	}
 	public List<String> getRawAuthors() {
 		return rawAuthors;

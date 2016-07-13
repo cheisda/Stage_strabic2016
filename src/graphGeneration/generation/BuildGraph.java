@@ -63,7 +63,7 @@ public class BuildGraph {
 				filename = art.getFilename();
 				for (String t: art.getKeywords()){
 					String[] ns1 = t.split("#");
-					if ("".equals(auteur)){
+            if ("".equals(auteur)){
 						auteur = ns1[ns1.length - 1].replace('_',' ');
 					} else {
 						auteur = auteur + ", " + ns1[ns1.length - 1].replace('_',' ');
