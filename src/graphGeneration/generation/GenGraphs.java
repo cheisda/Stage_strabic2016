@@ -1,9 +1,17 @@
 package graphGeneration.generation;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.tinkerpop.blueprints.Graph;
+import graphGeneration.UI.ArticleFrame;
+import graphGeneration.UI.HtmlFrame;
+import graphGeneration.UI.MainFrame;
+import graphGeneration.analyse.PdfTextAnalysis;
+import graphGeneration.db.StrabicDataBase;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,19 +26,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-
-import com.tinkerpop.blueprints.Graph;
-import graphGeneration.UI.ArticleFrame;
-import graphGeneration.UI.HtmlFrame;
-import graphGeneration.UI.MainFrame;
-import graphGeneration.analyse.PdfTextAnalysis;
-import graphGeneration.db.StrabicDataBase;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class GenGraphs {
 	static public final boolean gui = false;
@@ -83,6 +82,7 @@ public class GenGraphs {
      */
     public static void execute(String db_path, String seasons_file_directory, String article_baseurl, String thumb_baseurl, boolean writeArticleFiles) {
 		thumbBaseurl = thumb_baseurl;
+		//System.out.println("GenGrpahs.java  : : humbBaseurl : : " + thumbBaseurl);
 		strabicDBPath = db_path;
 		seasonsFilePath = seasons_file_directory + "seasons.txt";
 		articles_baseurl = article_baseurl;

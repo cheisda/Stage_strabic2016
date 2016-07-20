@@ -1,23 +1,13 @@
 package graphGeneration.generation;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import graphGeneration.analyse.FileAnalysisResult;
 import graphGeneration.analyse.PdfTextAnalysis;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
+
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Article {
 	private Node nodeXML = null;
@@ -61,7 +51,6 @@ public class Article {
 		int i = 0;
 		int len = 0;
 		String outs = "";
-    System.out.println("le out dde la fonction toString : line 64 "+ outs);
 		outs = outs + "saison: " + getSaison() + "\n";
 		outs = outs + "titre: " + getTitre() + "\n";
 		outs = outs + "URL: " + getURL() + "\n";
@@ -74,7 +63,6 @@ public class Article {
 		for (i=0;i<len;i++){
 			outs = outs + "found: " + getFoundURI().get(i) + "\n";
 		}
-    System.out.println("le out dde la fonction toString : line 77 "+ outs);
 		if (getText().length() > displayLength)
 			outs = outs + "text: \n" + getText().substring(0, displayLength) + "...\n";
 		else

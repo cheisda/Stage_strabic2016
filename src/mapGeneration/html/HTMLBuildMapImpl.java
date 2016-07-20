@@ -14,13 +14,10 @@ import utils.Utils;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
-import articleGeneration.HTMLBuildArticleImpl;
 /**
  * Implementation of a HTML builder for maps
  * @author Loann Neveu
@@ -43,11 +40,10 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
   static boolean verifImage(String lien){
 
     DefaultHttpClient client = new DefaultHttpClient();
-    //la quesry correspond à l'adresse que l'on va tester
+    //la query correspond à l'adresse que l'on va tester
     String query = lien;
     //vérif
     //System.out.println(query);
-
 
     HttpGet httpGet = new HttpGet(query);
     HttpResponse response1 = null;
@@ -56,12 +52,12 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
       //System.out.println(response1);
       int status = response1.getStatusLine().getStatusCode();
       if (status == 200) {
-        System.out.println("STATUS : " + status);
+        //System.out.println("STATUS : " + status);
         return true;
       }
       else {
+          System.out.println("STATUS : " + status);
         return false;
-        //System.out.println("STATUS : " + status);
       }
 
     } catch (ClientProtocolException e) {
@@ -95,22 +91,22 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
           //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
-          System.out.println("Groupe " + i +  ":" + m.group(0));
-          //Vérification des liens.
-          //verifImage(m.group(1));
-          String newFileName =  "src\\lienImages.txt";
-          if (verifImage(m.group(1))) {
+         // System.out.println("Groupe " + i +  ":" + m.group(0));
+
+          String newFileName =  "src\\linksThumbnailNotWorking1.txt";
+          if (!verifImage(m.group(0))) {
             try {
-              BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
-              // normalement si le fichier n'existe pas, il est crée à la racine du projet
-              writer.write(m.group(1));
-              writer.newLine();
-              writer.close();
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
+                  BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
+                  // normalement si le fichier n'existe pas, il est crée à la racine du projet
+                  writer.write(m.group(0));
+               System.out.println("Ce que j'écris dans le fichier ThumnailsNotWorking : "+m.group(0));
+                  writer.newLine();
+                  writer.close();
+              } catch (IOException e) {
+                  e.printStackTrace();
+              }
           }else {
-            System.out.println("Le lien ne fonctionne pas");
+            System.out.println("le lien focntionne");
           }
         }//fin de for
       }//fin WHILE
@@ -123,10 +119,7 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
     public HTMLBuildMapImpl(String output_directory, String resources_directory) {
         OUPUT_DIRECTORY = output_directory;
         RESOURCES_FOLDER = resources_directory;
-      /**
-       * Added By cheisda on June 13th 2016
-       */
-     // System.out.println("it's me, Wombat! the ouptPut directory " +OUPUT_DIRECTORY );
+
 
         // CREATE DIRECTORY IF NOT EXIST
         new File(OUPUT_DIRECTORY).mkdirs();
@@ -179,13 +172,10 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         HTMLString.append("px;z-index:");
         HTMLString.append(Utils.round(data_layout.getZ(), 2));
         HTMLString.append("\">");
-/**
- * Modif à faire ici soit ajouter un ../ avant le data/articles soit dans la balise href ajouter directement
- * l'adresse complète qui mène vers l'article.
- */
+
         // href article
         HTMLString.append("<a href=\"");
-      //modif on 06.14.2016
+      //modif on 07.18.2016
 
         HTMLString.append("http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getUrl_article());
         //System.out.println("href artiche.getURL : "+  data_article.getUrl_article());
@@ -197,7 +187,8 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
         //System.out.println(data_article.toString());
       String lienThumbnail = "http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getThumbnail();
-     // checkImage("http://127.0.0.1/Stage2016/Strabic-master/data/img//L-esprit-Castor-Mythe-et-realites.jpg");
+      //checkImage("http://strabic.fr/IMG/jpg/SOSPEL_AtelierDesMerveilles_StandAmbulantParticipatif_1.jpg");
+        checkImage(lienThumbnail);
       //erreur sur le lien testé :  java.lang.IllegalArgumentException: Illegal character in path at index 44: 127.0.0.1/Stage2016/Strabic-master/data/img/\L-esprit-Castor-Mythe-et-realites.jpg
         HTMLString.append(lienThumbnail);
 

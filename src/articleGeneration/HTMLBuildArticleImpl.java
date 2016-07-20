@@ -3,12 +3,8 @@ package articleGeneration;
 import graphGeneration.generation.Article;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import java.io.*;
 import java.text.ParseException;
@@ -17,8 +13,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-//Cheisda
 import java.util.regex.PatternSyntaxException;
+
+//Cheisda
 
 
 /**
@@ -76,7 +73,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
   static boolean verifImage(String lien){
 
     DefaultHttpClient client = new DefaultHttpClient();
-    //la quesry correspond à l'adresse que l'on va tester
+    //la query correspond à l'adresse que l'on va tester
     String query = lien;
     //vérif
     //System.out.println(query);
@@ -128,22 +125,22 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
           //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
-           System.out.println("Groupe " + i +  ":" + m.group(1));
+           //System.out.println("Groupe " + i +  ":" + m.group(1));
           //Vérification des liens.
           //verifImage(m.group(1));
-          String newFileName =  "src\\lienImages.txt";
-          if (verifImage(m.group(1))) {
+          String newFileName =  "src\\lienImages1.txt";
+          if (!verifImage(m.group(1))) {
             try {
               BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
               // normalement si le fichier n'existe pas, il est crée à la racine du projet
-              writer.write(m.group(1));
+              writer.write(m.group(0));
               writer.newLine();
               writer.close();
             } catch (IOException e) {
               e.printStackTrace();
             }
           }else {
-            System.out.println("Le lien ne fonctionne pas");
+            System.out.println("Le lien fonctionne");
           }
         }//fin de for
       }//fin WHILE
@@ -159,7 +156,9 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
 
       String text = article.getChapo() + article.getRawtext();
       String filename = article.getFilename() + ".html";
+
         checkImage(text);
+        //checkImage("<image=http://strabic.fr/IMG/jpg/3.jpg>");
       text = this.parser(text);
       String html = this.getHtml(article, text);
         //System.out.println(html);

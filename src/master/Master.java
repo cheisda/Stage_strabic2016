@@ -2,7 +2,6 @@ package master;
 
 import articleGeneration.GenArticles;
 import graphGeneration.generation.GenGraphs;
-
 import mapGeneration.GenMaps;
 import org.apache.commons.cli.*;
 
@@ -66,12 +65,13 @@ public class Master {
                 String output_articles_directory = ensureTrailingSlash(line.getOptionValue("a", DEFAULT_OUTPUT_ARTICLES_DIRECTORY));
                 String seasons_file_directory = ensureTrailingSlash(line.getOptionValue("s", DEFAULT_SEASONS_DIRECTORY));
                 String resources_directory = ensureTrailingSlash(line.getOptionValue("r", DEFAULT_RESOURCES_DIRECTORY));
-                String thumbs_baseurl = ensureTrailingSlash(line.getOptionValue("bui", DEFAULT_THUMBS_BASEURL));
+                //String thumbs_baseurl = ensureTrailingSlash(line.getOptionValue("bui", DEFAULT_THUMBS_BASEURL));
                 String articles_baseurl = ensureTrailingSlash(line.getOptionValue("bua", DEFAULT_ARTICLES_BASEURL));
 
 
                 // generate graphs (saisons, auteurs, keyword)
-                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
+                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
+                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
 
                 // apply algorithm layout and generate HTML file for each graph
                 GenMaps.execute(output_maps_directory, resources_directory);
@@ -99,16 +99,4 @@ public class Master {
         return path;
     }
 
-
-    /**
-     * TO DO
-     * regarder le contenu de la bdd car le nom des images dans les .html ne correspond pas au nom de l'image dans le repo
-     * Aussi afficher la bdd via l'interface de l'appli (??) strabic et essayer de savoir si les fichiers images sont présents ou non
-     * pour cela, si le fichier est en local faire : ??
-     * si le fichier est en ligne, executer un prg qui requetera sur un http : si ça renvoie 200 = OK sinon c'est faux, il y a erreur
-     *
-     * Les images sont tjs sur strabifr et c'est là qu'il faut aller les chercher
-     * ->Comprendre ce que StrabicDataBase.java fait
-     *
-     */
 }
