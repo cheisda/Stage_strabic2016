@@ -128,7 +128,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
            //System.out.println("Groupe " + i +  ":" + m.group(1));
           //Vérification des liens.
           //verifImage(m.group(1));
-          String newFileName =  "src\\lienImages1.txt";
+          String newFileName =  "src\\lienImages2.txt";
           if (!verifImage(m.group(1))) {
             try {
               BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));

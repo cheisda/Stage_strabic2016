@@ -93,7 +93,7 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
           //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
          // System.out.println("Groupe " + i +  ":" + m.group(0));
 
-          String newFileName =  "src\\linksThumbnailNotWorking1.txt";
+          String newFileName =  "src\\linksThumbnailNotWorking2.txt";
           if (!verifImage(m.group(0))) {
             try {
                   BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
