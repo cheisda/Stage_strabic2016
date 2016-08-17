@@ -61,12 +61,7 @@
       <artifactId>doxia-core</artifactId>
       <version>1.6</version>
     </dependency>
-    <dependency>
-      <groupId>org.kevoree.modeling</groupId>
-      <artifactId>org.kevoree.modeling.dsl</artifactId>
-      <version>3.5.12</version>
-    </dependency>
-    <dependency>
+       <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.4</version>
@@ -99,7 +94,11 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.8.11.2</version>
     </dependency>
-
+    <dependency>
+      <groupId>org.kevoree.modeling</groupId>
+      <artifactId>org.kevoree.modeling.dsl</artifactId>
+      <version>3.5.12</version>
+    </dependency>
     <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -116,8 +115,6 @@
       <artifactId>blueprints-core</artifactId>
       <version>2.6.0</version>
     </dependency>
-
-
   </dependencies>
 
 </project>

@@ -65,13 +65,13 @@ public class Master {
                 String output_articles_directory = ensureTrailingSlash(line.getOptionValue("a", DEFAULT_OUTPUT_ARTICLES_DIRECTORY));
                 String seasons_file_directory = ensureTrailingSlash(line.getOptionValue("s", DEFAULT_SEASONS_DIRECTORY));
                 String resources_directory = ensureTrailingSlash(line.getOptionValue("r", DEFAULT_RESOURCES_DIRECTORY));
-                //String thumbs_baseurl = ensureTrailingSlash(line.getOptionValue("bui", DEFAULT_THUMBS_BASEURL));
+                String thumbs_baseurl = ensureTrailingSlash(line.getOptionValue("bui", DEFAULT_THUMBS_BASEURL));
                 String articles_baseurl = ensureTrailingSlash(line.getOptionValue("bua", DEFAULT_ARTICLES_BASEURL));
 
 
                 // generate graphs (saisons, auteurs, keyword)
-                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
-                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
+                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
+                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
 
                 // apply algorithm layout and generate HTML file for each graph
                 GenMaps.execute(output_maps_directory, resources_directory);

@@ -3,6 +3,7 @@ package articleGeneration;
 import graphGeneration.generation.Article;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
@@ -14,9 +15,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 //Cheisda
-
 
 /**
  * Implementation of a HTML builder for articles
@@ -62,6 +61,10 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
     private static Pattern p_rem_parag_h3 = Pattern.compile("<p>(<h3>.*?</h3>)</p>",Pattern.MULTILINE);
     private static Pattern p_rem_parag_marg = Pattern.compile("<p>(<div class=\"marge\">.*</div>)</p>",Pattern.MULTILINE);
 
+    //Création d'un LOG
+   // private static final Logger logger = Logger.getLogger(HTMLBuildArticleImpl.class);
+   /* protected static Logger logger=  Logger.getLogger(HTMLBuildArticleImpl.class);*/
+
 
     public HTMLBuildArticleImpl(String output_directory) {
         OUPUT_DIRECTORY = output_directory;
@@ -72,21 +75,21 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
 
   static boolean verifImage(String lien){
 
-    DefaultHttpClient client = new DefaultHttpClient();
+    HttpClient client = new DefaultHttpClient();
     //la query correspond à l'adresse que l'on va tester
     String query = lien;
     //vérif
     //System.out.println(query);
 
+      HttpGet httpGet = new HttpGet(query);
+      HttpResponse response1 = null;
 
-    HttpGet httpGet = new HttpGet(query);
-    HttpResponse response1 = null;
-    try {
+      try {
       response1 = client.execute(httpGet);
       //System.out.println(response1);
       int status = response1.getStatusLine().getStatusCode();
       if (status == 200) {
-        //System.out.println("STATUS : " + status);
+       // System.out.println("STATUS : " + status);
         return true;
       }
       else {
@@ -101,7 +104,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-        /*try {
+       /* try {
             client.close();
         } catch (IOException e) {
             System.out.println("client closing issue");
@@ -124,14 +127,16 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         compteur++;
         //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
-          //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
-           //System.out.println("Groupe " + i +  ":" + m.group(1));
-          //Vérification des liens.
-          //verifImage(m.group(1));
-          String newFileName =  "src\\lienImages2.txt";
-          if (!verifImage(m.group(1))) {
+          String newFileName =  "src\\lienImages6.txt";
+            int lenght=0;
+         if (!verifImage(m.group(1))) {
             try {
-              BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
+
+              /* //création d'un log au 25 juillet 2016
+                Handler fh = new FileHandler("myLog.log",true);
+                logger.log(Level.WARNING, "argument out of limit");*/
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
               // normalement si le fichier n'existe pas, il est crée à la racine du projet
               writer.write(m.group(0));
               writer.newLine();
@@ -140,7 +145,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
               e.printStackTrace();
             }
           }else {
-            System.out.println("Le lien fonctionne");
+            //System.out.println("Le lien fonctionne");
           }
         }//fin de for
       }//fin WHILE
@@ -158,7 +163,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
       String filename = article.getFilename() + ".html";
 
         checkImage(text);
-        //checkImage("<image=http://strabic.fr/IMG/jpg/3.jpg>");
+
       text = this.parser(text);
       String html = this.getHtml(article, text);
         //System.out.println(html);

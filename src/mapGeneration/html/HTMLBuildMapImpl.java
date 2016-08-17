@@ -56,6 +56,7 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         return true;
       }
       else {
+          System.out.println("lien : "+query);
           System.out.println("STATUS : " + status);
         return false;
       }
@@ -93,7 +94,7 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
           //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
          // System.out.println("Groupe " + i +  ":" + m.group(0));
 
-          String newFileName =  "src\\linksThumbnailNotWorking2.txt";
+          String newFileName =  "src\\linksThumbnailNotWorking5.txt";
           if (!verifImage(m.group(0))) {
             try {
                   BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
@@ -175,24 +176,19 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
         // href article
         HTMLString.append("<a href=\"");
-      //modif on 07.18.2016
-
-        HTMLString.append("http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getUrl_article());
+        HTMLString.append(data_article.getUrl_article());
         //System.out.println("href artiche.getURL : "+  data_article.getUrl_article());
-
         HTMLString.append("\" target=\"_parent\" class=\"href-article\">");
 
         // thumbnail
         HTMLString.append("<img src=\"");
-
-        //System.out.println(data_article.toString());
-      String lienThumbnail = "http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getThumbnail();
+     //Test en local
+        // String lienThumbnail = "http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getThumbnail();
+        String lienThumbnail =data_article.getThumbnail();
       //checkImage("http://strabic.fr/IMG/jpg/SOSPEL_AtelierDesMerveilles_StandAmbulantParticipatif_1.jpg");
-        checkImage(lienThumbnail);
+       checkImage(lienThumbnail);
       //erreur sur le lien testé :  java.lang.IllegalArgumentException: Illegal character in path at index 44: 127.0.0.1/Stage2016/Strabic-master/data/img/\L-esprit-Castor-Mythe-et-realites.jpg
         HTMLString.append(lienThumbnail);
-
-
         HTMLString.append("\" alt=\"");
         HTMLString.append(data_article.getTitle());
       //System.out.println("titre artice : " +data_article.getTitle());
@@ -237,4 +233,6 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         }
         HTMLString.append(content);
     }
+
+
 }
