@@ -13,6 +13,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by Cheisda on 19/07/2016.
+ * Cette classe sert de boite à outils pour les fonctions utilisées dans le projet
  */
 public class tools {
 
@@ -47,11 +48,6 @@ public class tools {
       // TODO Auto-generated catch block
       e.printStackTrace();
     }
-        /*try {
-            client.close();
-        } catch (IOException e) {
-            System.out.println("client closing issue");
-        }*/
     return false; //request did not work.
 
   }
@@ -70,16 +66,14 @@ public class tools {
         compteur++;
         //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
-          //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
-          // System.out.println("Groupe " + i +  ":" + m.group(1));
-          //Vérification des liens.
-          //verifImage(m.group(1));
           String newFileName =  "src\\lienImages.txt";
-          if (verifImage(m.group(1))) {
-            try {
+
+              if (!verifImage(m.group(0))) {
+               try {
               BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
               // normalement si le fichier n'existe pas, il est crée à la racine du projet
               writer.write(m.group(1));
+                   replaceByDefault(m.group(1));
               writer.newLine();
               writer.close();
             } catch (IOException e) {
@@ -93,7 +87,13 @@ public class tools {
     }catch(PatternSyntaxException pse){
       System.err.println("Le pattern n'a pas un format correct.");
     }
-    //System.out.println("Il y a "+compteur+" images.");
+
+  }
+
+  public String  replaceByDefault(String lienDefectueux){
+    String lienDefaut = "src\\defaut.png\"";
+      lienDefectueux=lienDefaut;
+      return lienDefaut;
   }
 
 
