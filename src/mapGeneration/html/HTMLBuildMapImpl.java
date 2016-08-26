@@ -5,19 +5,20 @@ import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import elements.ArticleData;
 import elements.LayoutData;
+import master.StrabicLog;
+import master.tools;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import utils.Utils;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
 /**
  * Implementation of a HTML builder for maps
  * @author Loann Neveu
@@ -35,52 +36,16 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
     private static String OUPUT_DIRECTORY;
     private static String RESOURCES_FOLDER;
     //Patterns
-    private static Pattern p_image = Pattern.compile("http://(.*)",Pattern.MULTILINE);
+    private static Pattern p_image = Pattern.compile("data/img/(.*).jpg",Pattern.MULTILINE);
 
-  static boolean verifImage(String lien){
+    //création d'un objet LOGGER
+    private final static Logger logBuilMapImpl = Logger.getLogger(HTMLBuildMapImpl.class.getName());
 
-    DefaultHttpClient client = new DefaultHttpClient();
-    //la query correspond à l'adresse que l'on va tester
-    String query = lien;
-    //vérif
-    //System.out.println(query);
 
-    HttpGet httpGet = new HttpGet(query);
-    HttpResponse response1 = null;
-    try {
-      response1 = client.execute(httpGet);
-      //System.out.println(response1);
-      int status = response1.getStatusLine().getStatusCode();
-      if (status == 200) {
-        //System.out.println("STATUS : " + status);
-        return true;
-      }
-      else {
-          System.out.println("lien : "+query);
-          System.out.println("STATUS : " + status);
-        return false;
-      }
 
-    } catch (ClientProtocolException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-        /*try {
-            client.close();
-        } catch (IOException e) {
-            System.out.println("client closing issue");
-        }*/
-    return false; //request did not work.
-
-  }
 
   public void checkImage(String texteBrut){
     String text = texteBrut;
-    //System.out.println(text);
-    int compteur =0;
     try{
       Pattern p= p_image;
       String entree = text;
@@ -88,37 +53,25 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
       while(m.find()){
         System.out.println("FOUND");
-        compteur++;
-        //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
-          //affichage de la sous-chaine trouvée (seuls les lien directs sont affichées
-         // System.out.println("Groupe " + i +  ":" + m.group(0));
-
-          String newFileName =  "src\\linksThumbnailNotWorking5.txt";
-          if (!verifImage(m.group(0))) {
-            try {
-                  BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
-                  // normalement si le fichier n'existe pas, il est crée à la racine du projet
-                  writer.write(m.group(0));
-               System.out.println("Ce que j'écris dans le fichier ThumnailsNotWorking : "+m.group(0));
-                  writer.newLine();
-                  writer.close();
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
-          }else {
-            System.out.println("le lien focntionne");
-          }
+                if (!tools.verifImage(m.group(0))){
+                    StrabicLog.init();
+                    System.out.println("Ecriture dans le LOG");
+                    logBuilMapImpl.log(Level.WARNING,m.group(0));
+                }else {
+                    System.out.println("le lien fonctionne");
+                }
         }//fin de for
       }//fin WHILE
     }catch(PatternSyntaxException pse){
       System.err.println("Le pattern n'a pas un format correct.");
     }
-    //System.out.println("Il y a "+compteur+" images.");
+
   }
 
     public HTMLBuildMapImpl(String output_directory, String resources_directory) {
         OUPUT_DIRECTORY = output_directory;
+
         RESOURCES_FOLDER = resources_directory;
 
 
@@ -143,7 +96,6 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         BufferedWriter out = null;
         try {
             System.out.println("Written graph HTML file: " + OUPUT_DIRECTORY + filename);
-
             out =  new BufferedWriter(new OutputStreamWriter(new FileOutputStream(OUPUT_DIRECTORY + filename),"UTF-8"));
             out.append(HTMLString);
         } catch (IOException e) {
@@ -182,12 +134,10 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
         // thumbnail
         HTMLString.append("<img src=\"");
-     //Test en local
-        // String lienThumbnail = "http://127.0.0.1/Stage2016/Strabic-master/"+data_article.getThumbnail();
+
         String lienThumbnail =data_article.getThumbnail();
-      //checkImage("http://strabic.fr/IMG/jpg/SOSPEL_AtelierDesMerveilles_StandAmbulantParticipatif_1.jpg");
-       checkImage(lienThumbnail);
-      //erreur sur le lien testé :  java.lang.IllegalArgumentException: Illegal character in path at index 44: 127.0.0.1/Stage2016/Strabic-master/data/img/\L-esprit-Castor-Mythe-et-realites.jpg
+        //mise en commentaire au 22 aout car on ne peux vérifier si les fichiers existent bien
+       //checkImage(lienThumbnail);
         HTMLString.append(lienThumbnail);
         HTMLString.append("\" alt=\"");
         HTMLString.append(data_article.getTitle());

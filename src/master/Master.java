@@ -70,8 +70,8 @@ public class Master {
 
 
                 // generate graphs (saisons, auteurs, keyword)
-                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
-                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
+                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
+                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
 
                 // apply algorithm layout and generate HTML file for each graph
                 GenMaps.execute(output_maps_directory, resources_directory);

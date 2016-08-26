@@ -1,17 +1,16 @@
 package articleGeneration;
 
 import graphGeneration.generation.Article;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import master.StrabicLog;
+import master.tools;
 
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -62,8 +61,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
     private static Pattern p_rem_parag_marg = Pattern.compile("<p>(<div class=\"marge\">.*</div>)</p>",Pattern.MULTILINE);
 
     //Création d'un LOG
-   // private static final Logger logger = Logger.getLogger(HTMLBuildArticleImpl.class);
-   /* protected static Logger logger=  Logger.getLogger(HTMLBuildArticleImpl.class);*/
+    private final static Logger logBuilArticleImpl = Logger.getLogger(HTMLBuildArticleImpl.class.getName());
 
 
     public HTMLBuildArticleImpl(String output_directory) {
@@ -73,102 +71,57 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         new File(OUPUT_DIRECTORY).mkdirs();
     }
 
-  static boolean verifImage(String lien){
 
-    HttpClient client = new DefaultHttpClient();
-    //la query correspond à l'adresse que l'on va tester
-    String query = lien;
-    //vérif
-    //System.out.println(query);
-
-      HttpGet httpGet = new HttpGet(query);
-      HttpResponse response1 = null;
-
-      try {
-      response1 = client.execute(httpGet);
-      //System.out.println(response1);
-      int status = response1.getStatusLine().getStatusCode();
-      if (status == 200) {
-       // System.out.println("STATUS : " + status);
-        return true;
-      }
-      else {
-        return false;
-        //System.out.println("STATUS : " + status);
-      }
-
-    } catch (ClientProtocolException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
-       /* try {
-            client.close();
-        } catch (IOException e) {
-            System.out.println("client closing issue");
-        }*/
-    return false; //request did not work.
-
-  }
 
   public void checkImage(String texteBrut){
     String text = texteBrut;
-    //System.out.println(text);
-    int compteur =0;
+      //String chaineSortie="";
+
     try{
       Pattern p= p_image;
       String entree = text;
       Matcher m = p.matcher(entree);
 
-      while(m.find()){
-        //System.out.println("FOUND");
-        compteur++;
-        //our chaque groupe capturé
+        StringBuffer sb = new StringBuffer();
+       // String texteRemplace ="src\\pikachu.png\"";
+
+        while(m.find()){
+        //pour chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
-          String newFileName =  "src\\lienImages6.txt";
-            int lenght=0;
-         if (!verifImage(m.group(1))) {
-            try {
-
-              /* //création d'un log au 25 juillet 2016
-                Handler fh = new FileHandler("myLog.log",true);
-                logger.log(Level.WARNING, "argument out of limit");*/
-
-                BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
-              // normalement si le fichier n'existe pas, il est crée à la racine du projet
-              writer.write(m.group(0));
-              writer.newLine();
-              writer.close();
-            } catch (IOException e) {
-              e.printStackTrace();
-            }
-          }else {
-            //System.out.println("Le lien fonctionne");
+         if (!tools.verifImage(m.group(1))) {
+             StrabicLog.init();
+             logBuilArticleImpl.log(Level.WARNING,m.group(0));
           }
         }//fin de for
+            //m.appendReplacement(sb, texteRemplace);
       }//fin WHILE
+       // m.appendTail(sb);
+        // chaineSortie=sb.toString();
     }catch(PatternSyntaxException pse){
       System.err.println("Le pattern n'a pas un format correct.");
+       // chaineSortie = "nothing";
     }
-    //System.out.println("Il y a "+compteur+" images.");
+   // return chaineSortie;
+
   }
+  /**
+   * Non utilisé
+   * public static String  replaceByDefault(String lienDefectueux){
+        String lienDefaut = "src\\pikachu.png\"";
+        String lienRecu= lienDefectueux;
+        lienRecu=lienDefaut;
+        System.out.println("c'est fait !!!"+lienRecu);
+        return lienRecu;
+    }*/
 
 
   public void create(Article article)
     {
-
       String text = article.getChapo() + article.getRawtext();
       String filename = article.getFilename() + ".html";
-
         checkImage(text);
-
       text = this.parser(text);
       String html = this.getHtml(article, text);
-        //System.out.println(html);
-
-
         // write buffer in a file
         BufferedWriter out = null;
         String path = this.OUPUT_DIRECTORY + filename;

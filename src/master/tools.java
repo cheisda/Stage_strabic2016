@@ -1,3 +1,5 @@
+package master;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -10,7 +12,6 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 /**
  * Created by Cheisda on 19/07/2016.
  * Cette classe sert de boite à outils pour les fonctions utilisées dans le projet
@@ -20,41 +21,37 @@ public class tools {
   //Patterns
   private static Pattern p_image = Pattern.compile("(http://.*?)",Pattern.MULTILINE);
 
-  static boolean verifImage(String lien){
-    DefaultHttpClient client = new DefaultHttpClient();
-    //la quesry correspond à l'adresse que l'on va tester
-    String query = lien;
-    //vérif
-    //System.out.println(query);
-    HttpGet httpGet = new HttpGet(query);
-    HttpResponse response1 = null;
-    try {
-      response1 = client.execute(httpGet);
-      //System.out.println(response1);
-      int status = response1.getStatusLine().getStatusCode();
-      if (status == 200) {
-        //System.out.println("STATUS : " + status);
-        return true;
-      }
-      else {
-        return false;
-        //System.out.println("STATUS : " + status);
-      }
+    public static boolean verifImage(String lien){
 
-    } catch (ClientProtocolException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+        DefaultHttpClient client = new DefaultHttpClient();
+        String query = lien;
+
+        HttpGet httpGet = new HttpGet(query);
+        HttpResponse response1 = null;
+        try {
+            response1 = client.execute(httpGet);
+            int status = response1.getStatusLine().getStatusCode();
+            if (status == 200) {
+                return true;
+            }
+            else {
+                //si le lien n'est pas le bon, on le remplace
+                //replaceByDefault(lien);
+                return false;
+            }
+
+        } catch (ClientProtocolException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false; //request did not work.
     }
-    return false; //request did not work.
-
-  }
 
   public void checkImage(String texteBrut){
     String text = texteBrut;
-    //System.out.println(text);
     int compteur =0;
     try{
       Pattern p= p_image;
@@ -66,14 +63,12 @@ public class tools {
         compteur++;
         //our chaque groupe capturé
         for (int i=0; i<= m.groupCount(); i++){
-          String newFileName =  "src\\lienImages.txt";
-
+          String newFileName =  "src\\lienImagesNew.txt";
               if (!verifImage(m.group(0))) {
                try {
               BufferedWriter writer = new BufferedWriter(new FileWriter(new File(newFileName), true));
               // normalement si le fichier n'existe pas, il est crée à la racine du projet
               writer.write(m.group(1));
-                   replaceByDefault(m.group(1));
               writer.newLine();
               writer.close();
             } catch (IOException e) {
@@ -87,17 +82,15 @@ public class tools {
     }catch(PatternSyntaxException pse){
       System.err.println("Le pattern n'a pas un format correct.");
     }
-
   }
 
-  public String  replaceByDefault(String lienDefectueux){
-    String lienDefaut = "src\\defaut.png\"";
-      lienDefectueux=lienDefaut;
-      return lienDefaut;
+  public static String  replaceByDefault(String lienDefectueux){
+    String lienDefaut = "src\\pikachu.png\"";
+      String lienRecu= lienDefectueux;
+      lienRecu=lienDefaut;
+      System.out.println("c'est fait !!!"+lienRecu);
+      return lienRecu;
   }
-
-
-
 
 
 }
