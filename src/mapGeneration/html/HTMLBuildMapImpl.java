@@ -35,9 +35,8 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
     private static String OUPUT_DIRECTORY;
     private static String RESOURCES_FOLDER;
-    //Patterns
-    private static Pattern p_image = Pattern.compile("data/img/(.*).jpg",Pattern.MULTILINE);
-
+    //pattern
+    private static Pattern p_image = Pattern.compile("<img src=(http://.*?)>",Pattern.MULTILINE);
     //création d'un objet LOGGER
     private final static Logger logBuilMapImpl = Logger.getLogger(HTMLBuildMapImpl.class.getName());
 
@@ -56,7 +55,7 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         for (int i=0; i<= m.groupCount(); i++){
                 if (!tools.verifImage(m.group(0))){
                     StrabicLog.init();
-                    System.out.println("Ecriture dans le LOG");
+                    //System.out.println("Ecriture dans le LOG");
                     logBuilMapImpl.log(Level.WARNING,m.group(0));
                 }else {
                     System.out.println("le lien fonctionne");
@@ -128,16 +127,18 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
 
         // href article
         HTMLString.append("<a href=\"");
-        HTMLString.append(data_article.getUrl_article());
+        HTMLString.append("http://strabic.irisa.fr/"+data_article.getUrl_article());
+        // vrai code : HTMLString.append(data_article.getUrl_article());
         //System.out.println("href artiche.getURL : "+  data_article.getUrl_article());
         HTMLString.append("\" target=\"_parent\" class=\"href-article\">");
 
         // thumbnail
         HTMLString.append("<img src=\"");
-
-        String lienThumbnail =data_article.getThumbnail();
+        //Ecriture du lien en dur
+        String lienThumbnail ="http://strabic.irisa.fr/"+data_article.getThumbnail();
         //mise en commentaire au 22 aout car on ne peux vérifier si les fichiers existent bien
-       //checkImage(lienThumbnail);
+        //System.out.println(lienThumbnail);
+        checkImage(lienThumbnail);
         HTMLString.append(lienThumbnail);
         HTMLString.append("\" alt=\"");
         HTMLString.append(data_article.getTitle());

@@ -125,6 +125,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         // write buffer in a file
         BufferedWriter out = null;
         String path = this.OUPUT_DIRECTORY + filename;
+
         try {
             out =  new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path),"UTF-8"));
             out.append(html);

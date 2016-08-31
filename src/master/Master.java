@@ -14,12 +14,17 @@ import java.io.IOException;
 public class Master {
 
     //private static final String DEFAULT_OUTPUT_MAPS_DIRECTORY = " ";
+    //Pour les tests en local
     private static final String DEFAULT_OUTPUT_MAPS_DIRECTORY = "data/maps/";
     private static final String DEFAULT_OUTPUT_ARTICLES_DIRECTORY = "data/articles/";
     private static final String DEFAULT_SEASONS_DIRECTORY = "data/tmp/";
     private static final String DEFAULT_RESOURCES_DIRECTORY = "resources/maps/";
-    private static final String DEFAULT_THUMBS_BASEURL = "data/img/";
-    private static final String DEFAULT_ARTICLES_BASEURL = "data/articles/";
+    //NonCheisda_Code : private static final String DEFAULT_THUMBS_BASEURL = "data/img/";
+    private static final String DEFAULT_THUMBS_BASEURL = "maps/thumbs";
+    //me :private static final String DEFAULT_THUMBS_BASEURL = "data/maps/thumbs/";
+   // le vrai private static final String DEFAULT_ARTICLES_BASEURL = "data/articles/";
+    //ancienne lingne de code : private static final String DEFAULT_ARTICLES_BASEURL = "data/articles/";
+    private static final String DEFAULT_ARTICLES_BASEURL = "/articles/";
 
 
     public static void main(String[] args) throws IOException {
@@ -70,8 +75,8 @@ public class Master {
 
 
                 // generate graphs (saisons, auteurs, keyword)
-                //GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
-                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl,DEFAULT_THUMBS_BASEURL , false); // false = don't create graphml files
+                GenGraphs.execute(db_path, seasons_file_directory, articles_baseurl, thumbs_baseurl, false); // false = don't create graphml files
+
 
                 // apply algorithm layout and generate HTML file for each graph
                 GenMaps.execute(output_maps_directory, resources_directory);
