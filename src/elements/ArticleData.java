@@ -58,7 +58,8 @@ public class ArticleData {
                 ", author='" + author + '\'' +
                 ", url_article='" + url_article + '\'' +
                 ", url_season='" + url_season + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
+               // ", thumbnail='" + thumbnail + '\'' +
+                ", thumbnail='" + thumbnail + '/' +
                 ", filename='" + filename + '\'' +
                 '}';
     }

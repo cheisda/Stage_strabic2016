@@ -71,39 +71,6 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         new File(OUPUT_DIRECTORY).mkdirs();
     }
 
-
-
-  public void checkImage(String texteBrut){
-    String text = texteBrut;
-      //String chaineSortie="";
-
-    try{
-      Pattern p= p_image;
-      String entree = text;
-      Matcher m = p.matcher(entree);
-
-        StringBuffer sb = new StringBuffer();
-       // String texteRemplace ="src\\pikachu.png\"";
-
-        while(m.find()){
-        //pour chaque groupe capturé
-        for (int i=0; i<= m.groupCount(); i++){
-         if (!tools.verifImage(m.group(1))) {
-             StrabicLog.init();
-             logBuilArticleImpl.log(Level.WARNING,m.group(0));
-          }
-        }//fin de for
-            //m.appendReplacement(sb, texteRemplace);
-      }//fin WHILE
-       // m.appendTail(sb);
-        // chaineSortie=sb.toString();
-    }catch(PatternSyntaxException pse){
-      System.err.println("Le pattern n'a pas un format correct.");
-       // chaineSortie = "nothing";
-    }
-   // return chaineSortie;
-
-  }
   /**
    * Non utilisé
    * public static String  replaceByDefault(String lienDefectueux){
@@ -119,7 +86,7 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
     {
       String text = article.getChapo() + article.getRawtext();
       String filename = article.getFilename() + ".html";
-        checkImage(text);
+        checkImage(text, p_image);
       text = this.parser(text);
       String html = this.getHtml(article, text);
         // write buffer in a file
@@ -285,5 +252,33 @@ public class HTMLBuildArticleImpl implements HTMLBuildArticle{
         }
 
         return date;
+    }
+
+    /**
+     * Added by Cheisda
+     * Fonction qui vérifie si la balise image d'un article fait bien référence à une image existante
+     * Si le lien est déféctueux, on l'inscrrit dans un fichier LOG
+     */
+    public static void checkImage(String texteBrut, Pattern pattern){
+        String text = texteBrut;
+        try{
+            Pattern p= pattern;
+            String entree = text;
+            Matcher m = p.matcher(entree);
+
+            while(m.find()){
+                //System.out.println("FOUND");
+                for (int i=0; i<= m.groupCount(); i++){
+                    if (!tools.verifImage(m.group(1))){
+                        StrabicLog.init();
+                        logBuilArticleImpl.log(Level.WARNING,m.group(0));
+                    }else {
+                        //System.out.println("le lien fonctionne");
+                    }
+                }//fin de for
+            }//fin WHILE
+        }catch(PatternSyntaxException pse){
+            System.err.println("Le pattern n'a pas un format correct.");
+        }
     }
 }

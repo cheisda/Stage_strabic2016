@@ -229,7 +229,7 @@ public class Article {
 	}
 
 	public String getThumbnail() {
-		return thumbnail;
+        return thumbnail;
 	}
 
 	public void setThumbnail(String thumbnail) {

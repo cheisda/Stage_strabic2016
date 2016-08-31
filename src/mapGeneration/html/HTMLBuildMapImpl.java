@@ -1,6 +1,5 @@
 package mapGeneration.html;
 
-
 import com.tinkerpop.blueprints.Graph;
 import com.tinkerpop.blueprints.Vertex;
 import elements.ArticleData;
@@ -36,43 +35,16 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
     private static String OUPUT_DIRECTORY;
     private static String RESOURCES_FOLDER;
     //pattern
-    private static Pattern p_image = Pattern.compile("<img src=(http://.*?)>",Pattern.MULTILINE);
+    private static Pattern p_image = Pattern.compile("http://(.*)",Pattern.MULTILINE);
     //création d'un objet LOGGER
     private final static Logger logBuilMapImpl = Logger.getLogger(HTMLBuildMapImpl.class.getName());
 
 
 
-
-  public void checkImage(String texteBrut){
-    String text = texteBrut;
-    try{
-      Pattern p= p_image;
-      String entree = text;
-      Matcher m = p.matcher(entree);
-
-      while(m.find()){
-        System.out.println("FOUND");
-        for (int i=0; i<= m.groupCount(); i++){
-                if (!tools.verifImage(m.group(0))){
-                    StrabicLog.init();
-                    //System.out.println("Ecriture dans le LOG");
-                    logBuilMapImpl.log(Level.WARNING,m.group(0));
-                }else {
-                    System.out.println("le lien fonctionne");
-                }
-        }//fin de for
-      }//fin WHILE
-    }catch(PatternSyntaxException pse){
-      System.err.println("Le pattern n'a pas un format correct.");
-    }
-
-  }
-
     public HTMLBuildMapImpl(String output_directory, String resources_directory) {
         OUPUT_DIRECTORY = output_directory;
 
         RESOURCES_FOLDER = resources_directory;
-
 
         // CREATE DIRECTORY IF NOT EXIST
         new File(OUPUT_DIRECTORY).mkdirs();
@@ -128,21 +100,19 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
         // href article
         HTMLString.append("<a href=\"");
         HTMLString.append("http://strabic.irisa.fr/"+data_article.getUrl_article());
-        // vrai code : HTMLString.append(data_article.getUrl_article());
-        //System.out.println("href artiche.getURL : "+  data_article.getUrl_article());
         HTMLString.append("\" target=\"_parent\" class=\"href-article\">");
 
         // thumbnail
+        /**
+         * Vérification des liens des thumbnail lors de la génération
+         * Si les liens sont défectueux, ils sont inscrit dans un fichier LOG, et une image par défaut y est placée
+         * (pikachu)
+         */
         HTMLString.append("<img src=\"");
-        //Ecriture du lien en dur
-        String lienThumbnail ="http://strabic.irisa.fr/"+data_article.getThumbnail();
-        //mise en commentaire au 22 aout car on ne peux vérifier si les fichiers existent bien
-        //System.out.println(lienThumbnail);
-        checkImage(lienThumbnail);
-        HTMLString.append(lienThumbnail);
+        String lienThumbnail ="http://strabic.irisa.fr/"+data_article.getThumbnail().replace("\\", "/");
+        HTMLString.append(checkImage(lienThumbnail, p_image));
         HTMLString.append("\" alt=\"");
         HTMLString.append(data_article.getTitle());
-      //System.out.println("titre artice : " +data_article.getTitle());
         HTMLString.append("\" class=\"thumbnail\">");
         HTMLString.append("</a>");
 
@@ -186,4 +156,43 @@ public class HTMLBuildMapImpl implements HTMLBuildMap{
     }
 
 
+    /**
+     * Added By cheisda
+     * Fonction qui vérifie si le thumbnail existe bien.
+     * Si ce n'est pas le cas, elle inscrit le lien dans un LOG et remplace l'image par pikachu (defaut)
+     */
+
+    public static String checkImage(String texteBrut, Pattern pattern){
+
+        String text = texteBrut;
+        String resultat ="";
+        try{
+            Pattern p= pattern;
+            String entree = text;
+            Matcher m = p.matcher(entree);
+            String lienPika = "http://strabic.irisa.fr/maps/pikachu.png";
+
+            while(m.find()){
+                //System.out.println("FOUND");
+                for (int i=0; i<= m.groupCount(); i++){
+                    if (!tools.verifImage(m.group(0))){
+                        StrabicLog.init();
+                        logBuilMapImpl.log(Level.WARNING,m.group(0));
+
+                        //changer le lien par l'image Pikachu
+                        resultat =  m.group(0).replaceAll("http://(.*)", lienPika);
+
+                    }else {
+                        resultat = m.group(0);
+                    }
+                    return resultat;
+                }//fin de for
+            }//fin WHILE
+            return resultat;
+        }catch(PatternSyntaxException pse){
+            System.err.println("Le pattern n'a pas un format correct.");
+        }
+        System.out.println("le text en entrée après passage par vérif image : "+text);
+       return resultat;
+    }
 }

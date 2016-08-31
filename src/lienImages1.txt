@@ -1,5 +1,0 @@
-<image=http://strabic.fr/IMG/jpg/1.jpg>
-<image=http://strabic.fr/IMG/jpg/1.jpg>
-<image=http://strabic.fr/IMG/jpg/3-2.jpg>
-<image=http://strabic.fr/IMG/jpg/3-2.jpg>
-<image=http://strabic.fr/IMG/png/tranches-3.png>
